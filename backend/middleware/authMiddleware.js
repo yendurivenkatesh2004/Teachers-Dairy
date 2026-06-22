@@ -21,13 +21,6 @@ const protect = async (req, res, next) => {
             return res.status(401).json({ message: 'Not authorized, user no longer exists' });
         }
 
-        // 💡 MAGIC ALIASING STEP: 
-        // If the logged-in user is a principal, map their runtime role to 'hm' 
-        // so they pass all existing 'hm' route checks without changing route files.
-        if (req.user.role === 'principal') {
-            req.user.role = 'hm';
-        }
-
         next();
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {

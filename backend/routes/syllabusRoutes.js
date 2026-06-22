@@ -11,8 +11,7 @@ const {
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 // teacher, hm, deputy_hm, hod can all teach and manage their own syllabuses
-router.use(protect, authorize('teacher', 'hm', 'deputy_hm', 'hod'));
-
+router.use(protect, authorize('teacher', 'hm', 'deputy_hm', 'hod', 'principal'));
 router.post('/create', createSyllabus);
 router.delete('/:syllabusId', deleteSyllabus);
 router.get('/teacher/:teacherId', getTeacherAllocations);

@@ -128,7 +128,7 @@ exports.deRegisterUser = async (req, res) => {
 
         // Any role that can be assigned as a teacher on an Allocation
         // (see syllabusRoutes.js: teacher, hm, deputy_hm, hod can all create syllabuses)
-        const teachingRoles = ['teacher', 'hm', 'deputy_hm', 'hod'];
+        const teachingRoles = ['teacher', 'hm', 'deputy_hm', 'hod', 'principal'];
         if (teachingRoles.includes(user.role)) {
             const allocations = await Allocation.find({ teacher: userId });
             for (const alloc of allocations) {
