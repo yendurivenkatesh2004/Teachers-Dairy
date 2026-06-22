@@ -72,6 +72,7 @@ function App() {
         return <AdminPanel userId={user.id} />;
       case 'hm':
       case 'deputy_hm':
+      case 'principal':
         return (
           <MonitorWithTeaching
             user={user}
@@ -80,8 +81,6 @@ function App() {
             monitorProps={{ role: user.role }}
           />
         );
-      case 'principal':
-        return <HeadMasterDashboard role={user.role} />;
       case 'hod':
         return (
           <MonitorWithTeaching
@@ -108,7 +107,7 @@ function App() {
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#ffffff', padding: '15px 30px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', borderBottom: '1px solid #eef2f6' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <img src="/images/logo.jpeg" alt="Montessori Indus School" style={{ height: '36px', width: '36px', objectFit: 'cover', borderRadius: '6px' }} />
-            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.3rem', fontWeight: '700' }}>Montessori Indus Residential  - Syllabus Tracking </h2>
+            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.3rem', fontWeight: '700' }}>Montessori Indus Residential School - Syllabus Tracking </h2>
           </div>
           {user && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
