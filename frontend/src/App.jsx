@@ -76,7 +76,7 @@ function App() {
         return (
           <MonitorWithTeaching
             user={user}
-            monitorLabel="🏫 HM Dashboard"
+            monitorLabel="Progress Dashboard"
             MonitorComponent={HeadMasterDashboard}
             monitorProps={{ role: user.role }}
           />
