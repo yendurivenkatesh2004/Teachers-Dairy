@@ -85,7 +85,7 @@ function App() {
         return (
           <MonitorWithTeaching
             user={user}
-            monitorLabel="🎯 HOD View"
+            monitorLabel="HOD View"
             MonitorComponent={HODDashboard}
             monitorProps={{ userId: user.id }}
           />
