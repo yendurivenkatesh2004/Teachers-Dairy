@@ -21,10 +21,10 @@ function AdminPanel({ userId }) {
       setLoading(true);
       setError('');
       const [secRes, userRes, allocRes, subRes] = await Promise.all([
-        fetch('http://localhost:5000/api/admin/sections', { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/admin/users', { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/admin/allocations', { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch('http://localhost:5000/api/admin/subjects', { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/sections`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/allocations`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/subjects`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
       if (secRes.ok) setSections(await secRes.json());
@@ -41,7 +41,7 @@ function AdminPanel({ userId }) {
   const handleCreateSection = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/sections', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/sections`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(sectionForm)
@@ -58,7 +58,7 @@ function AdminPanel({ userId }) {
   const handleDeleteSection = async (sectionId) => {
     if (!window.confirm('Are you sure you want to delete this section?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/sections/${sectionId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/sections/${sectionId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -70,7 +70,7 @@ function AdminPanel({ userId }) {
   const handleCreateSubject = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/subjects', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/subjects`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(subjectForm)
@@ -87,7 +87,7 @@ function AdminPanel({ userId }) {
   const handleDeleteSubject = async (subjectId) => {
     if (!window.confirm('Delete this subject? Teachers will no longer see it in their dropdown.')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/subjects/${subjectId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/subjects/${subjectId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -99,7 +99,7 @@ function AdminPanel({ userId }) {
   const handleDeRegisterUser = async (targetUserId) => {
     if (!window.confirm('Are you sure you want to completely deregister this user?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/users/${targetUserId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/users/${targetUserId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

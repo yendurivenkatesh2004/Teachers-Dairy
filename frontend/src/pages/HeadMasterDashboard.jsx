@@ -34,7 +34,7 @@ function HeadMasterDashboard() {
     try {
       setLoading(true);
       setError('');
-      const res = await fetch('http://localhost:5000/api/headmaster/classes', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/headmaster/classes`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to load classes');
@@ -59,7 +59,7 @@ function HeadMasterDashboard() {
       setSubjectsLoading(true);
       setError('');
       const res = await fetch(
-        `http://localhost:5000/api/headmaster/class/${encodeURIComponent(cls.className)}`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/headmaster/class/${encodeURIComponent(cls.className)}`,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error('Failed to load subjects for this class');

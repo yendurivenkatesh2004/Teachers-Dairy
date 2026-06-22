@@ -28,10 +28,10 @@ function TeacherDashboard({ teacherId }) {
   const fetchDashboardData = useCallback(async () => {
     try {
       const [allocRes, secRes] = await Promise.all([
-        fetch(`http://localhost:5000/api/syllabus/teacher/${teacherId}`, {
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/teacher/${teacherId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        fetch('http://localhost:5000/api/syllabus/sections', {
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/sections`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
       ]);
@@ -68,7 +68,7 @@ function TeacherDashboard({ teacherId }) {
     try {
       setSubjectsLoading(true);
       const res = await fetch(
-        `http://localhost:5000/api/syllabus/subjects?className=${encodeURIComponent(className)}`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/subjects?className=${encodeURIComponent(className)}`,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       if (!res.ok) throw new Error('Failed to load subjects');
@@ -147,7 +147,7 @@ function TeacherDashboard({ teacherId }) {
     }, null, 2));
 
     try {
-      const response = await fetch('http://localhost:5000/api/syllabus/create', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -183,7 +183,7 @@ function TeacherDashboard({ teacherId }) {
     e.stopPropagation();
     if (!window.confirm('Erase this entire syllabus and clear its history?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/syllabus/${syllabusId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/${syllabusId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

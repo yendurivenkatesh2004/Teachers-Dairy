@@ -48,7 +48,7 @@ function SyllabusTracker({ allocation, completedTopics, onProgressUpdate }) {
     if (syncing) return;
     setSyncing(subtopicId);
     try {
-      const res = await fetch('http://localhost:5000/api/syllabus/update-topic', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/update-topic`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ allocationId, subtopicId, status: newStatus })

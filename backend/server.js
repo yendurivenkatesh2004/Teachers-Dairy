@@ -43,6 +43,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`=============================================`);
     console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode`);
-    console.log(`🌐 API Gateway Entry: http://localhost:${PORT}`);
+    console.log(`🌐 API Gateway Entry: http://${process.env.HOST || 'localhost'}:${PORT}`);
     console.log(`=============================================`);
 });

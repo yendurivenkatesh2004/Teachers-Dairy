@@ -44,7 +44,7 @@ function HODDashboard({ userId }) {
   const fetchProfile = async () => {
     try {
       setProfileLoading(true);
-      const res = await fetch('http://localhost:5000/api/hod/profile', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/hod/profile`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -58,7 +58,7 @@ function HODDashboard({ userId }) {
 
   const fetchAvailableClasses = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/hod/classes', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/hod/classes`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setAvailableClasses(await res.json());
@@ -67,7 +67,7 @@ function HODDashboard({ userId }) {
 
   const fetchAvailableSubjects = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/hod/subjects', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/hod/subjects`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -80,7 +80,7 @@ function HODDashboard({ userId }) {
   const fetchProgress = async () => {
     try {
       setProgressLoading(true);
-      const res = await fetch('http://localhost:5000/api/hod/progress', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/hod/progress`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setProgressData(await res.json());
@@ -136,7 +136,7 @@ function HODDashboard({ userId }) {
 
     try {
       setSetupLoading(true);
-      const res = await fetch('http://localhost:5000/api/hod/setup', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/hod/setup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ subjects: setupEntries })
