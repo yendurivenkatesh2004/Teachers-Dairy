@@ -123,7 +123,6 @@ function HeadMasterDashboard() {
     return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
-  // ✅ Fixed: match by subtopic._id, not by title
   const getSubtopicStatus = (detail, subtopicId) => {
     const completed = detail.completedSubtopicIds || [];
     return completed.includes(subtopicId.toString()) ? 'completed' : 'not_yet';
@@ -149,23 +148,14 @@ function HeadMasterDashboard() {
     }
     return Object.values(groups).map(group => ({
       ...group,
-      avgProgress: Math.round(
-        group.sections.reduce((sum, s) => sum + s.progress, 0) / group.sections.length
-      )
+      avgProgress: Math.round(group.sections.reduce((sum, s) => sum + s.progress, 0) / group.sections.length)
     })).sort((a, b) => a.teacherName.localeCompare(b.teacherName));
   };
 
-  const getAllSubjects = (cls) => {
-    return [...new Set((cls.allocations || []).map(a => a.subject).filter(Boolean))];
-  };
+  const getAllSubjects = (cls) => [...new Set((cls.allocations || []).map(a => a.subject).filter(Boolean))];
+  const getAllSections = (cls) => [...new Set((cls.allocations || []).map(a => a.section).filter(Boolean))];
 
-  const getAllSections = (cls) => {
-    return [...new Set((cls.allocations || []).map(a => a.section).filter(Boolean))];
-  };
-
-  if (loading) return (
-    <div style={{ textAlign: 'center', padding: '60px', color: '#64748b' }}>Loading dashboard...</div>
-  );
+  if (loading) return <div style={{ textAlign: 'center', padding: '60px', color: '#64748b' }}>Loading dashboard...</div>;
 
   const allTeacherGroups = sectionsProgress.length > 0 ? getTeacherGroups(sectionsProgress) : [];
   const visibleTeacherGroups = selectedTeacherIds.length === 0
@@ -240,10 +230,7 @@ function HeadMasterDashboard() {
       {selectedClass && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-            <button
-              onClick={handleBackToClasses}
-              style={{ padding: '8px 16px', backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', color: '#475569', fontSize: '0.9rem' }}
-            >
+            <button onClick={handleBackToClasses} style={{ padding: '8px 16px', backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', color: '#475569', fontSize: '0.9rem' }}>
               ← All Classes
             </button>
             <span style={{ color: '#94a3b8' }}>›</span>
@@ -271,55 +258,22 @@ function HeadMasterDashboard() {
                 type="button"
                 onClick={() => setTeacherDropdownOpen(open => !open)}
                 disabled={!selectedSubject || allTeacherGroups.length === 0}
-                style={{
-                  width: '100%', padding: '11px 14px', border: '1px solid #cbd5e1', borderRadius: '8px',
-                  background: (!selectedSubject || allTeacherGroups.length === 0) ? '#f8fafc' : '#fff',
-                  fontSize: '0.95rem', color: '#1e293b', textAlign: 'left',
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  cursor: (!selectedSubject || allTeacherGroups.length === 0) ? 'not-allowed' : 'pointer'
-                }}
+                style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e1', borderRadius: '8px', background: (!selectedSubject || allTeacherGroups.length === 0) ? '#f8fafc' : '#fff', fontSize: '0.95rem', color: '#1e293b', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: (!selectedSubject || allTeacherGroups.length === 0) ? 'not-allowed' : 'pointer' }}
               >
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {teacherFilterLabel}
-                </span>
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{teacherFilterLabel}</span>
                 <span style={{ color: '#94a3b8', marginLeft: '8px' }}>{teacherDropdownOpen ? '▲' : '▼'}</span>
               </button>
 
               {teacherDropdownOpen && allTeacherGroups.length > 0 && (
-                <div style={{
-                  position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 20,
-                  background: '#fff', border: '1px solid #cbd5e1', borderRadius: '8px',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.12)', maxHeight: '260px', overflowY: 'auto'
-                }}>
-                  <div
-                    onClick={clearTeacherSelection}
-                    style={{
-                      padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold',
-                      color: selectedTeacherIds.length === 0 ? '#16a34a' : '#475569',
-                      backgroundColor: selectedTeacherIds.length === 0 ? '#f0fdf4' : 'transparent',
-                      borderBottom: '1px solid #f1f5f9'
-                    }}
-                  >
+                <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 20, background: '#fff', border: '1px solid #cbd5e1', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', maxHeight: '260px', overflowY: 'auto' }}>
+                  <div onClick={clearTeacherSelection} style={{ padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold', color: selectedTeacherIds.length === 0 ? '#16a34a' : '#475569', backgroundColor: selectedTeacherIds.length === 0 ? '#f0fdf4' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
                     {selectedTeacherIds.length === 0 ? '✓ ' : ''}All Teachers
                   </div>
                   {allTeacherGroups.map(g => {
                     const checked = selectedTeacherIds.includes(g.teacherId);
                     return (
-                      <label
-                        key={g.teacherId}
-                        style={{
-                          display: 'flex', alignItems: 'center', gap: '10px',
-                          padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem',
-                          backgroundColor: checked ? '#f0fdf4' : 'transparent'
-                        }}
-                        onMouseDown={(e) => e.preventDefault()}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleTeacherId(g.teacherId)}
-                          style={{ cursor: 'pointer', width: '15px', height: '15px', accentColor: '#16a34a' }}
-                        />
+                      <label key={g.teacherId} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem', backgroundColor: checked ? '#f0fdf4' : 'transparent' }} onMouseDown={(e) => e.preventDefault()}>
+                        <input type="checkbox" checked={checked} onChange={() => toggleTeacherId(g.teacherId)} style={{ cursor: 'pointer', width: '15px', height: '15px', accentColor: '#16a34a' }} />
                         <span style={{ color: '#1e293b', flex: 1 }}>{g.teacherName}</span>
                         <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: getProgressColor(g.avgProgress) }}>{g.avgProgress}%</span>
                       </label>
@@ -369,11 +323,7 @@ function HeadMasterDashboard() {
                       {visibleTeacherGroups.map((group, idx) => {
                         const isSelected = selectedTeacherIds.includes(group.teacherId);
                         return (
-                          <tr
-                            key={group.teacherId}
-                            onClick={() => toggleTeacherId(group.teacherId)}
-                            style={{ borderBottom: idx < visibleTeacherGroups.length - 1 ? '1px solid #f1f5f9' : 'none', backgroundColor: isSelected ? '#f0fdf4' : idx % 2 === 0 ? '#fff' : '#fafafa', cursor: 'pointer', outline: isSelected ? '2px solid #4CAF50' : 'none', outlineOffset: '-2px' }}
-                          >
+                          <tr key={group.teacherId} onClick={() => toggleTeacherId(group.teacherId)} style={{ borderBottom: idx < visibleTeacherGroups.length - 1 ? '1px solid #f1f5f9' : 'none', backgroundColor: isSelected ? '#f0fdf4' : idx % 2 === 0 ? '#fff' : '#fafafa', cursor: 'pointer', outline: isSelected ? '2px solid #4CAF50' : 'none', outlineOffset: '-2px' }}>
                             <td style={{ padding: '14px 16px' }}>
                               <div style={{ fontWeight: '600', color: '#1e293b' }}>{group.teacherName}</div>
                               {group.teacherMobile && <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '2px' }}>{group.teacherMobile}</div>}
@@ -417,115 +367,96 @@ function HeadMasterDashboard() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '12px', borderLeft: `3px solid ${getProgressColor(group.avgProgress)}40` }}>
-                      {group.sections
-                        .slice()
-                        .sort((a, b) => (a.section || '').localeCompare(b.section || ''))
-                        .map((detail, idx) => {
-                          const pct = detail.progress || 0;
-                          const cardKey = `${group.teacherId}|||${detail.section}`;
-                          const isExpanded = expandedSection === cardKey;
-                          const sylStart = formatDate(detail.startDate);
-                          const sylEnd = formatDate(detail.endDate);
+                      {group.sections.slice().sort((a, b) => (a.section || '').localeCompare(b.section || '')).map((detail, idx) => {
+                        const pct = detail.progress || 0;
+                        const cardKey = `${group.teacherId}|||${detail.section}`;
+                        const isExpanded = expandedSection === cardKey;
+                        const sylStart = formatDate(detail.startDate);
+                        const sylEnd = formatDate(detail.endDate);
+                        const hasComment = detail.comment && detail.comment !== 'No comment';
 
-                          return (
-                            <div key={idx} style={{ background: '#fff', border: `1px solid ${isExpanded ? getProgressColor(pct) : '#e2e8f0'}`, borderRadius: '10px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-
-                              <div
-                                onClick={() => setExpandedSection(isExpanded ? null : cardKey)}
-                                style={{ padding: '16px 20px', cursor: 'pointer' }}
-                              >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <h4 style={{ margin: 0, color: '#1e293b', fontSize: '0.95rem' }}>Section {detail.section}</h4>
-                                    {(sylStart || sylEnd) && (
-                                      <span style={{ fontSize: '0.75rem', color: '#94a3b8', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '2px 8px' }}>
-                                        📅 {sylStart || '—'} → {sylEnd || '—'}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <div style={{ padding: '4px 12px', borderRadius: '16px', backgroundColor: `${getProgressColor(pct)}18`, border: `1px solid ${getProgressColor(pct)}40`, fontWeight: 'bold', fontSize: '0.85rem', color: getProgressColor(pct) }}>
-                                      {pct}%
-                                    </div>
-                                    <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{isExpanded ? '▲' : '▼'}</span>
-                                  </div>
+                        return (
+                          <div key={idx} style={{ background: '#fff', border: `1px solid ${isExpanded ? getProgressColor(pct) : '#e2e8f0'}`, borderRadius: '10px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+                            <div onClick={() => setExpandedSection(isExpanded ? null : cardKey)} style={{ padding: '16px 20px', cursor: 'pointer' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                  <h4 style={{ margin: 0, color: '#1e293b', fontSize: '0.95rem' }}>Section {detail.section}</h4>
+                                  {(sylStart || sylEnd) && (
+                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '2px 8px' }}>
+                                      📅 {sylStart || '—'} → {sylEnd || '—'}
+                                    </span>
+                                  )}
                                 </div>
-                                <div style={{ backgroundColor: '#f1f5f9', borderRadius: '6px', height: '8px', overflow: 'hidden', marginBottom: '6px' }}>
-                                  <div style={{ backgroundColor: getProgressColor(pct), width: `${pct}%`, height: '100%', borderRadius: '6px', transition: 'width 0.4s ease' }} />
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#94a3b8' }}>
-                                  <span>{detail.completedTopics} of {detail.totalTopics} subtopics completed</span>
-                                  {pct === 100 && <span style={{ color: '#16a34a', fontWeight: 'bold' }}>✓ Complete</span>}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <div style={{ padding: '4px 12px', borderRadius: '16px', backgroundColor: `${getProgressColor(pct)}18`, border: `1px solid ${getProgressColor(pct)}40`, fontWeight: 'bold', fontSize: '0.85rem', color: getProgressColor(pct) }}>
+                                    {pct}%
+                                  </div>
+                                  <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{isExpanded ? '▲' : '▼'}</span>
                                 </div>
                               </div>
 
-                              {isExpanded && (
-                                <div style={{ borderTop: '1px solid #e2e8f0' }}>
-                                  {(detail.topics || []).length === 0 ? (
-                                    <p style={{ padding: '16px 20px', color: '#94a3b8', fontStyle: 'italic', margin: 0 }}>No topics found.</p>
-                                  ) : (
-                                    (detail.topics || []).map((topic, ti) => {
-                                      const topicProg = getTopicProgress(detail, topic);
-                                      const subs = topic.subtopics || [];
-                                      return (
-                                        <div key={ti} style={{ borderBottom: ti < detail.topics.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
-                                          <div style={{ padding: '12px 20px', backgroundColor: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '0.9rem' }}>{topic.title}</span>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                              {subs.length > 0 && (
-                                                <>
-                                                  <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{topicProg.completed}/{topicProg.total} done</span>
-                                                  <div style={{ width: '80px', backgroundColor: '#e2e8f0', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
-                                                    <div style={{ width: `${topicProg.pct}%`, height: '100%', backgroundColor: getProgressColor(topicProg.pct), borderRadius: '4px' }} />
-                                                  </div>
-                                                  <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: getProgressColor(topicProg.pct), minWidth: '32px', textAlign: 'right' }}>{topicProg.pct}%</span>
-                                                </>
-                                              )}
-                                            </div>
-                                          </div>
-
-                                          {subs.map((sub, si) => {
-                                            // ✅ Fixed: match by sub._id, not sub.title
-                                            const isDone = getSubtopicStatus(detail, sub._id) === 'completed';
-                                            return (
-                                              <div
-                                                key={si}
-                                                style={{
-                                                  display: 'flex', alignItems: 'center', gap: '10px',
-                                                  padding: '9px 20px 9px 36px',
-                                                  borderBottom: si < subs.length - 1 ? '1px solid #f8fafc' : 'none',
-                                                  backgroundColor: isDone ? '#f0fdf4' : '#fff'
-                                                }}
-                                              >
-                                                <div style={{
-                                                  width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0,
-                                                  backgroundColor: isDone ? '#16a34a' : '#e2e8f0',
-                                                  display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                                }}>
-                                                  {isDone && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>✓</span>}
-                                                </div>
-                                                <span style={{
-                                                  fontSize: '0.85rem',
-                                                  color: isDone ? '#94a3b8' : '#334155',
-                                                  textDecoration: isDone ? 'line-through' : 'none'
-                                                }}>
-                                                  {sub.title}
-                                                </span>
-                                                {!isDone && (
-                                                  <span style={{ marginLeft: 'auto', fontSize: '0.72rem', color: '#cbd5e1' }}>not covered</span>
-                                                )}
-                                              </div>
-                                            );
-                                          })}
-                                        </div>
-                                      );
-                                    })
-                                  )}
+                              {/* ── Teacher comment — always visible ── */}
+                              {hasComment && (
+                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', margin: '0 0 10px 0', padding: '7px 10px', backgroundColor: '#fffbeb', border: '1px solid #fde68a', borderRadius: '6px' }}>
+                                  <span style={{ fontSize: '0.78rem', flexShrink: 0 }}>💬</span>
+                                  <span style={{ fontSize: '0.78rem', color: '#92400e', fontStyle: 'italic', lineHeight: '1.4' }}>{detail.comment}</span>
                                 </div>
                               )}
+
+                              <div style={{ backgroundColor: '#f1f5f9', borderRadius: '6px', height: '8px', overflow: 'hidden', marginBottom: '6px' }}>
+                                <div style={{ backgroundColor: getProgressColor(pct), width: `${pct}%`, height: '100%', borderRadius: '6px', transition: 'width 0.4s ease' }} />
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#94a3b8' }}>
+                                <span>{detail.completedTopics} of {detail.totalTopics} subtopics completed</span>
+                                {pct === 100 && <span style={{ color: '#16a34a', fontWeight: 'bold' }}>✓ Complete</span>}
+                              </div>
                             </div>
-                          );
-                        })}
+
+                            {isExpanded && (
+                              <div style={{ borderTop: '1px solid #e2e8f0' }}>
+                                {(detail.topics || []).length === 0 ? (
+                                  <p style={{ padding: '16px 20px', color: '#94a3b8', fontStyle: 'italic', margin: 0 }}>No topics found.</p>
+                                ) : (
+                                  (detail.topics || []).map((topic, ti) => {
+                                    const topicProg = getTopicProgress(detail, topic);
+                                    const subs = topic.subtopics || [];
+                                    return (
+                                      <div key={ti} style={{ borderBottom: ti < detail.topics.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
+                                        <div style={{ padding: '12px 20px', backgroundColor: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                          <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '0.9rem' }}>{topic.title}</span>
+                                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            {subs.length > 0 && (
+                                              <>
+                                                <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{topicProg.completed}/{topicProg.total} done</span>
+                                                <div style={{ width: '80px', backgroundColor: '#e2e8f0', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
+                                                  <div style={{ width: `${topicProg.pct}%`, height: '100%', backgroundColor: getProgressColor(topicProg.pct), borderRadius: '4px' }} />
+                                                </div>
+                                                <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: getProgressColor(topicProg.pct), minWidth: '32px', textAlign: 'right' }}>{topicProg.pct}%</span>
+                                              </>
+                                            )}
+                                          </div>
+                                        </div>
+                                        {subs.map((sub, si) => {
+                                          const isDone = getSubtopicStatus(detail, sub._id) === 'completed';
+                                          return (
+                                            <div key={si} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 20px 9px 36px', borderBottom: si < subs.length - 1 ? '1px solid #f8fafc' : 'none', backgroundColor: isDone ? '#f0fdf4' : '#fff' }}>
+                                              <div style={{ width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0, backgroundColor: isDone ? '#16a34a' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                {isDone && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>✓</span>}
+                                              </div>
+                                              <span style={{ fontSize: '0.85rem', color: isDone ? '#94a3b8' : '#334155', textDecoration: isDone ? 'line-through' : 'none' }}>{sub.title}</span>
+                                              {!isDone && <span style={{ marginLeft: 'auto', fontSize: '0.72rem', color: '#cbd5e1' }}>not covered</span>}
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    );
+                                  })
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}

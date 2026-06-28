@@ -130,6 +130,7 @@ exports.getProgress = async (req, res) => {
                         section: alloc.section,
                         startDate: alloc.startDate,
                         endDate: alloc.endDate,
+                        comment: alloc.comment || 'No comment',
                         topics: alloc.topics,
                         totalTopics: totalSubtopics,
                         completedTopics: completedRecords.length,

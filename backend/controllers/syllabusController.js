@@ -202,3 +202,24 @@ exports.getSubjectsByClass = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+// @desc    Teacher updates comment on their allocation
+// @route   PATCH /api/syllabus/:syllabusId/comment
+// @body    { comment }
+exports.updateAllocationComment = async (req, res) => {
+  try {
+    const { syllabusId } = req.params;
+    const { comment } = req.body;
+
+    const allocation = await Allocation.findOneAndUpdate(
+      { _id: syllabusId, teacher: req.user._id },
+      { $set: { comment: comment?.trim() || 'No comment' } },
+      { new: true }
+    );
+
+    if (!allocation) return res.status(404).json({ message: 'Allocation not found or not authorized' });
+    res.status(200).json({ message: 'Comment updated', comment: allocation.comment });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

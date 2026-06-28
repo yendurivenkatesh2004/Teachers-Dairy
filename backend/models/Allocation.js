@@ -18,6 +18,7 @@ const AllocationSchema = new mongoose.Schema({
     subject: { type: String, required: true, trim: true },
     startDate: { type: Date },
     endDate: { type: Date },
+    comment: { type: String, trim: true, default: 'No comment' },
     topics: [TopicSchema]
 }, { timestamps: true });
 

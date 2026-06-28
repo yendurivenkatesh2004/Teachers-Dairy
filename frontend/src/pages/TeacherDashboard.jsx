@@ -1,6 +1,137 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import SyllabusTracker from '../components/SyllabusTracker';
 
+function CommentEditor({ allocation, token, onSaved }) {
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState(allocation.comment || 'No comment');
+  const [saving, setSaving] = useState(false);
+  const textareaRef = useRef(null);
+
+  const openEditor = (e) => {
+    e.stopPropagation();
+    setDraft(allocation.comment || 'No comment');
+    setOpen(true);
+    setTimeout(() => textareaRef.current?.focus(), 50);
+  };
+
+  const handleSave = async (e) => {
+    e.stopPropagation();
+    setSaving(true);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/${allocation._id}/comment`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ comment: draft.trim() || 'No comment' })
+        }
+      );
+      if (!res.ok) throw new Error('Failed to save comment');
+      setOpen(false);
+      onSaved();
+    } catch {
+      // silently ignore — parent will still refresh
+      setOpen(false);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = (e) => {
+    e.stopPropagation();
+    setOpen(false);
+  };
+
+  return (
+    <div style={{ marginTop: '8px' }} onClick={(e) => e.stopPropagation()}>
+      {!open ? (
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+          <span
+            style={{
+              fontSize: '0.78rem',
+              color: allocation.comment && allocation.comment !== 'No comment' ? '#475569' : '#94a3b8',
+              fontStyle: 'italic',
+              flex: 1,
+              lineHeight: '1.4',
+              wordBreak: 'break-word'
+            }}
+          >
+            💬 {allocation.comment || 'No comment'}
+          </span>
+          <button
+            onClick={openEditor}
+            title="Edit comment"
+            style={{
+              flexShrink: 0,
+              background: 'none',
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              padding: '2px 6px',
+              cursor: 'pointer',
+              fontSize: '0.72rem',
+              color: '#64748b',
+              lineHeight: '1.4'
+            }}
+          >
+            ✏️ Edit
+          </button>
+        </div>
+      ) : (
+        <div
+          style={{
+            background: '#fff',
+            border: '1px solid #94a3b8',
+            borderRadius: '6px',
+            padding: '10px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.10)'
+          }}
+        >
+          <textarea
+            ref={textareaRef}
+            rows={3}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="Add a reason or note…"
+            style={{
+              width: '100%',
+              border: '1px solid #e2e8f0',
+              borderRadius: '4px',
+              padding: '6px 8px',
+              fontSize: '0.82rem',
+              resize: 'vertical',
+              fontFamily: 'inherit',
+              boxSizing: 'border-box',
+              color: '#1e293b'
+            }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '8px' }}>
+            <button
+              onClick={handleCancel}
+              style={{
+                padding: '4px 12px', border: '1px solid #cbd5e1', borderRadius: '4px',
+                background: '#f8fafc', cursor: 'pointer', fontSize: '0.8rem', color: '#475569'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              style={{
+                padding: '4px 12px', border: 'none', borderRadius: '4px',
+                background: saving ? '#94a3b8' : '#2196F3', color: '#fff',
+                cursor: saving ? 'not-allowed' : 'pointer', fontSize: '0.8rem', fontWeight: 'bold'
+              }}
+            >
+              {saving ? 'Saving…' : 'Save'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TeacherDashboard({ teacherId }) {
   const [allocations, setAllocations] = useState([]);
   const [sections, setSections] = useState([]);
@@ -120,13 +251,13 @@ function TeacherDashboard({ teacherId }) {
           .map(s => ({ title: s, description: '' }));
         return { title, subtopics, description: '' };
       });
-    
+
     if (topics.length === 0) {
       setError('Please enter at least one topic.');
       return;
     }
 
-    if(!startDate || !endDate) {
+    if (!startDate || !endDate) {
       setError('Please provide both start and end dates.');
       return;
     }
@@ -138,14 +269,6 @@ function TeacherDashboard({ teacherId }) {
 
     const sectionsPayload = selectedSectionIds.map(sectionId => ({ sectionId, topics }));
 
-    console.log('Payload:', JSON.stringify({
-      className: selectedClassName,
-      subject: selectedSubject,
-      sections: sectionsPayload,
-      startDate,
-      endDate
-    }, null, 2));
-
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/syllabus/create`, {
         method: 'POST',
@@ -154,8 +277,8 @@ function TeacherDashboard({ teacherId }) {
           className: selectedClassName,
           subject: selectedSubject,
           sections: sectionsPayload,
-          startDate: startDate,
-          endDate: endDate
+          startDate,
+          endDate
         })
       });
 
@@ -383,6 +506,14 @@ function TeacherDashboard({ teacherId }) {
                       <span>Completed Units</span>
                       <strong>{percentage}% ({completedCount}/{totalTopics})</strong>
                     </div>
+
+                    {/* ── Comment row ── */}
+                    <CommentEditor
+                      allocation={alloc}
+                      token={token}
+                      onSaved={fetchDashboardData}
+                    />
+
                     <button
                       onClick={(e) => handleDropSyllabusAllocation(alloc._id, e)}
                       style={{ position: 'absolute', top: '12px', right: '12px', padding: '4px 8px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}
