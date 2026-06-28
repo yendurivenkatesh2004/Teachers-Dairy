@@ -11,6 +11,21 @@
   --success: #16a34a;
   --success-bg: #f0fdf4;
   --border-color: #e2e8f0;
+
+  /* layout tokens used across pages so spacing scales together */
+  --page-padding: 14px;
+  --card-radius: 10px;
+  --tap-min: 44px; /* Apple/Google minimum comfortable touch target */
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  /* prevents iOS auto-zoom on input focus when font-size is >=16px,
+     but some inputs below intentionally use 16px explicitly too */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -21,39 +36,67 @@ body {
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* guard against any stray wide element forcing horizontal scroll */
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Any element that's still wider than viewport (legacy inline styles)
+   gets clipped rather than creating page-level horizontal scroll */
+#root {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 /* ==========================================================================
    2. Input Form Fields Elements Custom UI
    ========================================================================== */
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"],
+input[type="date"],
+select,
+textarea {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background-color: #fff;
   color: var(--text-main);
-  font-size: 0.95rem;
+  font-size: 16px; /* 16px minimum stops iOS Safari from auto-zooming on focus */
   transition: all 0.2s ease-in-out;
+  min-height: var(--tap-min);
 }
 
 input[type="email"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-input[type="email"]:disabled,
-input[type="password"]:disabled {
+input:disabled,
+select:disabled,
+textarea:disabled {
   background-color: #f1f5f9;
   cursor: not-allowed;
   color: var(--text-muted);
+}
+
+button {
+  min-height: var(--tap-min);
+  touch-action: manipulation;
 }
 
 /* ==========================================================================
@@ -62,8 +105,9 @@ input[type="password"]:disabled {
 input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  height: 20px;
-  width: 20px;
+  height: 22px;
+  width: 22px;
+  min-height: 22px; /* override the global min-height rule above */
   border: 2px solid #cbd5e1;
   border-radius: 4px;
   background-color: #fff;
@@ -73,6 +117,7 @@ input[type="checkbox"] {
   justify-content: center;
   position: relative;
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
 input[type="checkbox"]:checked {
@@ -83,17 +128,24 @@ input[type="checkbox"]:checked {
 input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
-  width: 5px;
-  height: 10px;
+  width: 6px;
+  height: 11px;
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
-  top: 2px;
+  top: 3px;
 }
 
 input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+}
+
+input[type="radio"] {
+  min-height: 18px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
@@ -110,4 +162,90 @@ input[type="checkbox"]:focus-visible {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ==========================================================================
+   5. Responsive layout primitives
+   These small utility classes replace fixed inline grid/maxWidth styles
+   that were previously hard-coded for desktop in each page component.
+   ========================================================================== */
+
+/* generic responsive grid: stacks to 1 column under 720px */
+.responsive-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.responsive-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .responsive-grid-2,
+  .responsive-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* page container: scales padding down on small screens */
+.page-container {
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  .page-container {
+    padding: var(--page-padding);
+  }
+}
+
+/* card grid for class selection etc. */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Teacher summary: table on desktop, stacked cards on mobile */
+.teacher-table-wrap {
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .teacher-table-wrap table,
+  .teacher-table-wrap thead {
+    display: none;
+  }
+}
+
+.teacher-stack-card {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .teacher-stack-card {
+    display: block;
+  }
+}
+
+/* horizontal tab/segment scroller for small screens, used by header tabs */
+.scroll-x-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scroll-x-tabs::-webkit-scrollbar {
+  display: none;
 }

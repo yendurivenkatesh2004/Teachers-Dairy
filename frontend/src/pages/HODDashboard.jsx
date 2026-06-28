@@ -207,11 +207,11 @@ function HODDashboard({ userId }) {
 
     return (
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <h2 style={{ color: '#1e293b', marginBottom: '8px' }}>HOD Profile Setup</h2>
-        <p style={{ color: '#64748b', marginBottom: '28px' }}>Add each subject you head, along with the classes you supervise for it.</p>
+        <h2 style={{ color: '#1e293b', marginBottom: '8px', fontSize: '1.25rem' }}>HOD Profile Setup</h2>
+        <p style={{ color: '#64748b', marginBottom: '24px', fontSize: '0.92rem' }}>Add each subject you head, along with the classes you supervise for it.</p>
 
         {setupError && (
-          <div style={{ backgroundColor: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '6px', marginBottom: '16px' }}>
+          <div style={{ backgroundColor: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '6px', marginBottom: '16px', wordBreak: 'break-word' }}>
             {setupError}
           </div>
         )}
@@ -219,7 +219,7 @@ function HODDashboard({ userId }) {
         {setupEntries.length > 0 && (
           <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {setupEntries.map(entry => (
-              <div key={entry.subject} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div key={entry.subject} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '14px 16px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
                 <div>
                   <div style={{ fontWeight: 'bold', color: '#1e293b', marginBottom: '6px' }}>{entry.subject}</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -228,7 +228,7 @@ function HODDashboard({ userId }) {
                     ))}
                   </div>
                 </div>
-                <button type="button" onClick={() => handleRemoveEntry(entry.subject)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                <button type="button" onClick={() => handleRemoveEntry(entry.subject)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold', minHeight: '36px' }}>
                   Remove
                 </button>
               </div>
@@ -237,13 +237,13 @@ function HODDashboard({ userId }) {
         )}
 
         {showAddSubjectForm ? (
-          <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', marginBottom: '20px' }}>
+          <div style={{ background: '#fff', padding: '20px 16px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', marginBottom: '20px' }}>
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#334155' }}>1. Choose a Subject</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                 {addableSubjects.map(s => (
-                  <label key={s} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', border: `2px solid ${draftSubject === s ? '#4CAF50' : '#e2e8f0'}`, borderRadius: '8px', background: draftSubject === s ? '#f0fdf4' : '#fff', cursor: 'pointer', fontWeight: 'bold', userSelect: 'none' }}>
-                    <input type="radio" name="draftSubject" checked={draftSubject === s} onChange={() => handleDraftSubjectSelect(s)} style={{ width: '16px', height: '16px' }} />
+                  <label key={s} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', minHeight: '44px', border: `2px solid ${draftSubject === s ? '#4CAF50' : '#e2e8f0'}`, borderRadius: '8px', background: draftSubject === s ? '#f0fdf4' : '#fff', cursor: 'pointer', fontWeight: 'bold', userSelect: 'none' }}>
+                    <input type="radio" name="draftSubject" checked={draftSubject === s} onChange={() => handleDraftSubjectSelect(s)} />
                     {s}
                   </label>
                 ))}
@@ -259,8 +259,8 @@ function HODDashboard({ userId }) {
                 {availableClasses.map(cls => {
                   const isChecked = draftClasses.includes(cls);
                   return (
-                    <label key={cls} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', border: `2px solid ${isChecked ? '#4CAF50' : '#e2e8f0'}`, borderRadius: '8px', background: isChecked ? '#f0fdf4' : '#fff', cursor: draftSubject ? 'pointer' : 'not-allowed', fontWeight: 'bold', userSelect: 'none' }}>
-                      <input type="checkbox" checked={isChecked} onChange={() => handleDraftClassToggle(cls)} disabled={!draftSubject} style={{ width: '16px', height: '16px' }} />
+                    <label key={cls} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', minHeight: '44px', border: `2px solid ${isChecked ? '#4CAF50' : '#e2e8f0'}`, borderRadius: '8px', background: isChecked ? '#f0fdf4' : '#fff', cursor: draftSubject ? 'pointer' : 'not-allowed', fontWeight: 'bold', userSelect: 'none' }}>
+                      <input type="checkbox" checked={isChecked} onChange={() => handleDraftClassToggle(cls)} disabled={!draftSubject} />
                       {cls}
                     </label>
                   );
@@ -270,19 +270,19 @@ function HODDashboard({ userId }) {
               {!draftSubject && <p style={{ marginTop: '8px', fontSize: '0.8rem', color: '#94a3b8' }}>Select a subject first.</p>}
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
               <button
                 type="button"
                 onClick={handleConfirmAddEntry}
                 disabled={!draftSubject || draftClasses.length === 0}
-                style={{ padding: '10px 18px', backgroundColor: (!draftSubject || draftClasses.length === 0) ? '#94a3b8' : '#4CAF50', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: (!draftSubject || draftClasses.length === 0) ? 'not-allowed' : 'pointer' }}
+                style={{ padding: '10px 18px', minHeight: '44px', backgroundColor: (!draftSubject || draftClasses.length === 0) ? '#94a3b8' : '#4CAF50', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: (!draftSubject || draftClasses.length === 0) ? 'not-allowed' : 'pointer', flex: '1 1 auto' }}
               >
                 Add Subject
               </button>
               <button
                 type="button"
                 onClick={handleCancelAddSubject}
-                style={{ padding: '10px 18px', backgroundColor: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+                style={{ padding: '10px 18px', minHeight: '44px', backgroundColor: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: '1 1 auto' }}
               >
                 Cancel
               </button>
@@ -293,7 +293,7 @@ function HODDashboard({ userId }) {
             type="button"
             onClick={handleAddSubjectClick}
             disabled={addableSubjects.length === 0}
-            style={{ width: '100%', padding: '14px', marginBottom: '20px', backgroundColor: '#fff', border: '2px dashed #cbd5e1', borderRadius: '10px', color: '#475569', fontWeight: 'bold', fontSize: '0.95rem', cursor: addableSubjects.length === 0 ? 'not-allowed' : 'pointer' }}
+            style={{ width: '100%', padding: '14px', minHeight: '48px', marginBottom: '20px', backgroundColor: '#fff', border: '2px dashed #cbd5e1', borderRadius: '10px', color: '#475569', fontWeight: 'bold', fontSize: '0.95rem', cursor: addableSubjects.length === 0 ? 'not-allowed' : 'pointer' }}
           >
             + Add Subject
           </button>
@@ -303,7 +303,7 @@ function HODDashboard({ userId }) {
           type="button"
           onClick={handleSetupSubmit}
           disabled={setupLoading || setupEntries.length === 0}
-          style={{ width: '100%', padding: '12px', backgroundColor: (setupLoading || setupEntries.length === 0) ? '#94a3b8' : '#4CAF50', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', cursor: (setupLoading || setupEntries.length === 0) ? 'not-allowed' : 'pointer' }}
+          style={{ width: '100%', padding: '14px', minHeight: '48px', backgroundColor: (setupLoading || setupEntries.length === 0) ? '#94a3b8' : '#4CAF50', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', cursor: (setupLoading || setupEntries.length === 0) ? 'not-allowed' : 'pointer' }}
         >
           {setupLoading ? 'Saving...' : 'Save Profile & Continue'}
         </button>
@@ -336,12 +336,12 @@ function HODDashboard({ userId }) {
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
-      <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ marginBottom: '24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
         <div>
-          <h1 style={{ margin: '0 0 4px 0', color: '#1e293b' }}>HOD View</h1>
-          <p style={{ margin: 0, color: '#64748b' }}>
+          <h1 style={{ margin: '0 0 4px 0', color: '#1e293b', fontSize: 'clamp(1.2rem, 5vw, 1.7rem)' }}>HOD View</h1>
+          <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}>
             {profile.subjects.map(e => (
-              <span key={e.subject} style={{ marginRight: '14px' }}>
+              <span key={e.subject} style={{ marginRight: '14px', display: 'inline-block' }}>
                 <strong>{e.subject}</strong>: {e.classNames.join(', ')}
               </span>
             ))}
@@ -349,7 +349,7 @@ function HODDashboard({ userId }) {
         </div>
         <button
           onClick={() => { setSetupEntries(profile.subjects || []); setProfile(null); }}
-          style={{ padding: '8px 14px', backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', color: '#475569' }}
+          style={{ padding: '8px 14px', minHeight: '40px', backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', color: '#475569' }}
         >
           Edit Profile
         </button>
@@ -358,12 +358,12 @@ function HODDashboard({ userId }) {
       {progressLoading ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>Loading progress data...</div>
       ) : progressData.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
+        <div style={{ textAlign: 'center', padding: '50px 16px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
           No syllabus data found yet for your subjects in your supervised classes.
         </div>
       ) : (
         <div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '28px', maxWidth: '900px' }}>
+          <div className="responsive-grid-3" style={{ marginBottom: '24px', maxWidth: '900px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#334155' }}>1. Select Subject</label>
               <select
@@ -375,7 +375,6 @@ function HODDashboard({ userId }) {
                   setTeacherDropdownOpen(false);
                   setExpandedSection(null);
                 }}
-                style={{ width: '100%', padding: '11px', border: '1px solid #cbd5e1', borderRadius: '8px', background: '#fff', fontSize: '0.95rem' }}
               >
                 <option value="">-- Select a subject --</option>
                 {subjectsWithData.map(s => <option key={s} value={s}>{s}</option>)}
@@ -393,7 +392,6 @@ function HODDashboard({ userId }) {
                   setExpandedSection(null);
                 }}
                 disabled={!selectedProgressSubject}
-                style={{ width: '100%', padding: '11px', border: '1px solid #cbd5e1', borderRadius: '8px', background: !selectedProgressSubject ? '#f8fafc' : '#fff', fontSize: '0.95rem' }}
               >
                 <option value="">-- Select a class --</option>
                 {classesForSelectedSubject.map(c => <option key={c} value={c}>{c}</option>)}
@@ -407,7 +405,7 @@ function HODDashboard({ userId }) {
                 onClick={() => setTeacherDropdownOpen(open => !open)}
                 disabled={!selectedProgressClass || allTeacherGroups.length === 0}
                 style={{
-                  width: '100%', padding: '11px 14px', border: '1px solid #cbd5e1', borderRadius: '8px',
+                  width: '100%', padding: '11px 14px', minHeight: '44px', border: '1px solid #cbd5e1', borderRadius: '8px',
                   background: (!selectedProgressClass || allTeacherGroups.length === 0) ? '#f8fafc' : '#fff',
                   fontSize: '0.95rem', color: '#1e293b', textAlign: 'left',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -420,14 +418,14 @@ function HODDashboard({ userId }) {
 
               {teacherDropdownOpen && allTeacherGroups.length > 0 && (
                 <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 20, background: '#fff', border: '1px solid #cbd5e1', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', maxHeight: '260px', overflowY: 'auto' }}>
-                  <div onClick={clearTeacherSelection} style={{ padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold', color: selectedTeacherIds.length === 0 ? '#16a34a' : '#475569', backgroundColor: selectedTeacherIds.length === 0 ? '#f0fdf4' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
+                  <div onClick={clearTeacherSelection} style={{ padding: '12px 14px', minHeight: '44px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold', color: selectedTeacherIds.length === 0 ? '#16a34a' : '#475569', backgroundColor: selectedTeacherIds.length === 0 ? '#f0fdf4' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
                     {selectedTeacherIds.length === 0 ? '✓ ' : ''}All Teachers
                   </div>
                   {allTeacherGroups.map(g => {
                     const checked = selectedTeacherIds.includes(g.teacherId);
                     return (
-                      <label key={g.teacherId} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem', backgroundColor: checked ? '#f0fdf4' : 'transparent' }} onMouseDown={(e) => e.preventDefault()}>
-                        <input type="checkbox" checked={checked} onChange={() => toggleTeacherId(g.teacherId)} style={{ cursor: 'pointer', width: '15px', height: '15px', accentColor: '#16a34a' }} />
+                      <label key={g.teacherId} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 14px', minHeight: '44px', cursor: 'pointer', fontSize: '0.9rem', backgroundColor: checked ? '#f0fdf4' : 'transparent' }} onMouseDown={(e) => e.preventDefault()}>
+                        <input type="checkbox" checked={checked} onChange={() => toggleTeacherId(g.teacherId)} />
                         <span style={{ color: '#1e293b', flex: 1 }}>{g.teacherName}</span>
                         <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: getProgressColor(g.avgProgress) }}>{g.avgProgress}%</span>
                       </label>
@@ -439,35 +437,35 @@ function HODDashboard({ userId }) {
           </div>
 
           {selectedProgressSubject && !selectedProgressClass && (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
+            <div style={{ textAlign: 'center', padding: '40px 16px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
               Select a class to view progress.
             </div>
           )}
 
           {selectedProgressClass && visibleSections.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
+            <div style={{ textAlign: 'center', padding: '40px 16px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
               No allocated sections found for this subject and class.
             </div>
           )}
 
           {visibleSections.length > 0 && (
             <div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
+              <div className="responsive-grid-3" style={{ marginBottom: '24px' }}>
                 {[
                   { label: 'Sections Shown', value: visibleSections.length },
                   { label: 'Fully Complete', value: visibleSections.filter(s => s.progress === 100).length },
                   { label: 'Average Progress', value: `${Math.round(visibleSections.reduce((sum, s) => sum + s.progress, 0) / visibleSections.length)}%` }
                 ].map(stat => (
-                  <div key={stat.label} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px 20px' }}>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</p>
-                    <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</p>
+                  <div key={stat.label} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '14px 18px' }}>
+                    <p style={{ margin: '0 0 4px 0', fontSize: '0.78rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</p>
+                    <p style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</p>
                   </div>
                 ))}
               </div>
 
               <div style={{ marginBottom: '28px' }}>
-                <h3 style={{ margin: '0 0 12px 0', color: '#334155' }}>Teacher Summary</h3>
-                <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', overflow: 'hidden' }}>
+                <h3 style={{ margin: '0 0 12px 0', color: '#334155', fontSize: '1.05rem' }}>Teacher Summary</h3>
+                <div className="teacher-table-wrap" style={{ border: '1px solid #e2e8f0', borderRadius: '10px', overflow: 'hidden' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                     <thead>
                       <tr style={{ backgroundColor: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
@@ -498,8 +496,36 @@ function HODDashboard({ userId }) {
                       })}
                     </tbody>
                   </table>
+
+                  {/* Mobile stacked-card version — shown only under 720px */}
+                  {visibleTeacherGroups.map((group) => {
+                    const isSelected = selectedTeacherIds.includes(group.teacherId);
+                    return (
+                      <div
+                        key={`stack-${group.teacherId}`}
+                        className="teacher-stack-card"
+                        onClick={() => toggleTeacherId(group.teacherId)}
+                        style={{ padding: '14px 16px', borderBottom: '1px solid #f1f5f9', backgroundColor: isSelected ? '#f0fdf4' : '#fff', cursor: 'pointer' }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                          <div>
+                            <div style={{ fontWeight: '600', color: '#1e293b' }}>{group.teacherName}</div>
+                            {group.teacherMobile && <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{group.teacherMobile}</div>}
+                          </div>
+                          <span style={{ fontWeight: 'bold', color: getProgressColor(group.avgProgress), fontSize: '1rem' }}>{group.avgProgress}%</span>
+                        </div>
+                        <div style={{ fontSize: '0.82rem', color: '#64748b', marginBottom: '8px' }}>
+                          {group.sections.map(s => `Sec ${s.section}`).join(', ')}
+                        </div>
+                        <div style={{ backgroundColor: '#f1f5f9', borderRadius: '4px', height: '8px', overflow: 'hidden' }}>
+                          <div style={{ backgroundColor: getProgressColor(group.avgProgress), width: `${group.avgProgress}%`, height: '100%', borderRadius: '4px' }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+
                   {selectedTeacherIds.length > 0 && (
-                    <div style={{ padding: '10px 16px', backgroundColor: '#f0fdf4', borderTop: '1px solid #e2e8f0', fontSize: '0.82rem', color: '#16a34a', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ padding: '10px 16px', backgroundColor: '#f0fdf4', borderTop: '1px solid #e2e8f0', fontSize: '0.82rem', color: '#16a34a', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
                       <span>Showing <strong>{teacherFilterLabel}</strong></span>
                       <button onClick={clearTeacherSelection} style={{ background: 'none', border: 'none', color: '#16a34a', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.82rem', textDecoration: 'underline' }}>Show all</button>
                     </div>
@@ -507,11 +533,11 @@ function HODDashboard({ userId }) {
                 </div>
               </div>
 
-              <h3 style={{ margin: '0 0 16px 0', color: '#334155' }}>{selectedProgressSubject} — Sections by Teacher</h3>
+              <h3 style={{ margin: '0 0 16px 0', color: '#334155', fontSize: '1.05rem' }}>{selectedProgressSubject} — Sections by Teacher</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {visibleTeacherGroups.map(group => (
                   <div key={group.teacherId}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', backgroundColor: '#f1f5f9', borderRadius: '8px', marginBottom: '10px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '8px', padding: '10px 16px', backgroundColor: '#f1f5f9', borderRadius: '8px', marginBottom: '10px' }}>
                       <div>
                         <span style={{ fontWeight: 'bold', color: '#1e293b' }}>👤 {group.teacherName}</span>
                         {group.teacherMobile && <span style={{ fontSize: '0.82rem', color: '#94a3b8', marginLeft: '10px' }}>{group.teacherMobile}</span>}
@@ -531,12 +557,12 @@ function HODDashboard({ userId }) {
 
                         return (
                           <div key={idx} style={{ background: '#fff', border: `1px solid ${isExpanded ? getProgressColor(pct) : '#e2e8f0'}`, borderRadius: '10px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-                            <div onClick={() => setExpandedSection(isExpanded ? null : cardKey)} style={{ padding: '14px 18px', cursor: 'pointer' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <div onClick={() => setExpandedSection(isExpanded ? null : cardKey)} style={{ padding: '14px 16px', cursor: 'pointer' }}>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
                                   <h4 style={{ margin: 0, color: '#1e293b', fontSize: '0.92rem' }}>Section {detail.section}</h4>
                                   {(sylStart || sylEnd) && (
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '2px 8px' }}>
+                                    <span style={{ fontSize: '0.72rem', color: '#94a3b8', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '2px 8px' }}>
                                       📅 {sylStart || '—'} → {sylEnd || '—'}
                                     </span>
                                   )}
@@ -547,18 +573,17 @@ function HODDashboard({ userId }) {
                                 </div>
                               </div>
 
-                              {/* ── Teacher comment — always visible ── */}
                               {hasComment && (
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', margin: '0 0 10px 0', padding: '7px 10px', backgroundColor: '#fffbeb', border: '1px solid #fde68a', borderRadius: '6px' }}>
                                   <span style={{ fontSize: '0.78rem', flexShrink: 0 }}>💬</span>
-                                  <span style={{ fontSize: '0.78rem', color: '#92400e', fontStyle: 'italic', lineHeight: '1.4' }}>{detail.comment}</span>
+                                  <span style={{ fontSize: '0.78rem', color: '#92400e', fontStyle: 'italic', lineHeight: '1.4', wordBreak: 'break-word' }}>{detail.comment}</span>
                                 </div>
                               )}
 
                               <div style={{ backgroundColor: '#f1f5f9', borderRadius: '4px', height: '8px', overflow: 'hidden', marginBottom: '5px' }}>
                                 <div style={{ backgroundColor: getProgressColor(pct), width: `${pct}%`, height: '100%' }} />
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#94a3b8' }}>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '6px', fontSize: '0.78rem', color: '#94a3b8' }}>
                                 <span>{detail.completedTopics} of {detail.totalTopics} topics completed</span>
                                 {pct === 100 && <span style={{ color: '#16a34a', fontWeight: 'bold' }}>✓ Complete</span>}
                               </div>
@@ -574,16 +599,16 @@ function HODDashboard({ userId }) {
                                     const subs = topic.subtopics || [];
                                     return (
                                       <div key={ti} style={{ borderBottom: ti < detail.topics.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
-                                        <div style={{ padding: '12px 20px', backgroundColor: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                          <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '0.9rem' }}>{topic.title}</span>
-                                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <div style={{ padding: '12px 16px', backgroundColor: '#f8fafc', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                                          <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '0.88rem' }}>{topic.title}</span>
+                                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             {subs.length > 0 && (
                                               <>
-                                                <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{topicProg.completed}/{topicProg.total} done</span>
-                                                <div style={{ width: '80px', backgroundColor: '#e2e8f0', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
+                                                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{topicProg.completed}/{topicProg.total} done</span>
+                                                <div style={{ width: '60px', backgroundColor: '#e2e8f0', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
                                                   <div style={{ width: `${topicProg.pct}%`, height: '100%', backgroundColor: getProgressColor(topicProg.pct), borderRadius: '4px' }} />
                                                 </div>
-                                                <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: getProgressColor(topicProg.pct), minWidth: '32px', textAlign: 'right' }}>{topicProg.pct}%</span>
+                                                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: getProgressColor(topicProg.pct), minWidth: '30px', textAlign: 'right' }}>{topicProg.pct}%</span>
                                               </>
                                             )}
                                           </div>
@@ -591,12 +616,12 @@ function HODDashboard({ userId }) {
                                         {subs.map((sub, si) => {
                                           const isDone = getSubtopicStatus(detail, sub._id) === 'completed';
                                           return (
-                                            <div key={si} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 20px 9px 36px', borderBottom: si < subs.length - 1 ? '1px solid #f8fafc' : 'none', backgroundColor: isDone ? '#f0fdf4' : '#fff' }}>
+                                            <div key={si} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 16px 9px 28px', borderBottom: si < subs.length - 1 ? '1px solid #f8fafc' : 'none', backgroundColor: isDone ? '#f0fdf4' : '#fff' }}>
                                               <div style={{ width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0, backgroundColor: isDone ? '#16a34a' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                 {isDone && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>✓</span>}
                                               </div>
-                                              <span style={{ fontSize: '0.85rem', color: isDone ? '#94a3b8' : '#334155', textDecoration: isDone ? 'line-through' : 'none' }}>{sub.title}</span>
-                                              {!isDone && <span style={{ marginLeft: 'auto', fontSize: '0.72rem', color: '#cbd5e1' }}>not covered</span>}
+                                              <span style={{ fontSize: '0.83rem', color: isDone ? '#94a3b8' : '#334155', textDecoration: isDone ? 'line-through' : 'none', wordBreak: 'break-word' }}>{sub.title}</span>
+                                              {!isDone && <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#cbd5e1', flexShrink: 0 }}>not covered</span>}
                                             </div>
                                           );
                                         })}

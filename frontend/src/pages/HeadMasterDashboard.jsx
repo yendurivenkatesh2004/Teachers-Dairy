@@ -172,29 +172,29 @@ function HeadMasterDashboard() {
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
-      <div style={{ marginBottom: '30px' }}>
-        <h1 style={{ margin: '0 0 5px 0', color: '#1e293b' }}>Academic Progress Dashboard</h1>
-        <p style={{ margin: 0, color: '#64748b' }}>Monitor syllabus progress across classes and subjects</p>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ margin: '0 0 5px 0', color: '#1e293b', fontSize: 'clamp(1.2rem, 5vw, 1.7rem)' }}>Academic Progress Dashboard</h1>
+        <p style={{ margin: 0, color: '#64748b', fontSize: '0.92rem' }}>Monitor syllabus progress across classes and subjects</p>
       </div>
 
       {error && (
-        <div style={{ backgroundColor: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '6px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>{error}</span>
-          <button onClick={() => setError('')} style={{ cursor: 'pointer', background: 'none', border: 'none', color: '#c62828', fontWeight: 'bold', fontSize: '1.1rem' }}>×</button>
+        <div style={{ backgroundColor: '#ffebee', color: '#c62828', padding: '12px', borderRadius: '6px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+          <span style={{ wordBreak: 'break-word' }}>{error}</span>
+          <button onClick={() => setError('')} style={{ cursor: 'pointer', background: 'none', border: 'none', color: '#c62828', fontWeight: 'bold', fontSize: '1.1rem', flexShrink: 0 }}>×</button>
         </div>
       )}
 
       {/* ── VIEW 1: Class Cards ── */}
       {!selectedClass && (
         <div>
-          <h2 style={{ marginBottom: '20px', color: '#334155' }}>Select a Class</h2>
+          <h2 style={{ marginBottom: '18px', color: '#334155', fontSize: '1.15rem' }}>Select a Class</h2>
           {classesData.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
-              <p style={{ fontSize: '1.1rem' }}>No class allocations found yet.</p>
+            <div style={{ textAlign: 'center', padding: '50px 16px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
+              <p style={{ fontSize: '1.05rem' }}>No class allocations found yet.</p>
               <p style={{ fontSize: '0.9rem' }}>Teachers need to create syllabuses first.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>
+            <div className="card-grid">
               {classesData.map(cls => {
                 const pct = cls.progress || 0;
                 const subjectCount = cls.totalSubjects ?? getAllSubjects(cls).length;
@@ -203,16 +203,14 @@ function HeadMasterDashboard() {
                   <div
                     key={cls.className}
                     onClick={() => handleClassSelect(cls)}
-                    style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.04)', transition: 'all 0.2s ease' }}
-                    onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.1)'}
-                    onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.04)'}
+                    style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.04)' }}
                   >
-                    <h3 style={{ margin: '0 0 6px 0', color: '#1e293b', fontSize: '1.2rem' }}>{cls.className}</h3>
+                    <h3 style={{ margin: '0 0 6px 0', color: '#1e293b', fontSize: '1.15rem' }}>{cls.className}</h3>
                     <p style={{ margin: '0 0 16px 0', fontSize: '0.85rem', color: '#64748b' }}>
                       {subjectCount} subject{subjectCount !== 1 ? 's' : ''} · {sectionCount} section{sectionCount !== 1 ? 's' : ''}
                     </p>
                     <div style={{ backgroundColor: '#f1f5f9', borderRadius: '6px', height: '10px', overflow: 'hidden', marginBottom: '8px' }}>
-                      <div style={{ backgroundColor: getProgressColor(pct), width: `${pct}%`, height: '100%', borderRadius: '6px', transition: 'width 0.4s ease' }} />
+                      <div style={{ backgroundColor: getProgressColor(pct), width: `${pct}%`, height: '100%', borderRadius: '6px' }} />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#64748b' }}>
                       <span>Overall progress</span>
@@ -229,23 +227,22 @@ function HeadMasterDashboard() {
       {/* ── VIEW 2: Subject + Sections ── */}
       {selectedClass && (
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-            <button onClick={handleBackToClasses} style={{ padding: '8px 16px', backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', color: '#475569', fontSize: '0.9rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+            <button onClick={handleBackToClasses} style={{ padding: '8px 14px', minHeight: '40px', backgroundColor: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', color: '#475569', fontSize: '0.88rem' }}>
               ← All Classes
             </button>
             <span style={{ color: '#94a3b8' }}>›</span>
-            <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '1.1rem' }}>{selectedClass.className}</span>
+            <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '1.05rem' }}>{selectedClass.className}</span>
             {selectedSubject && (<><span style={{ color: '#94a3b8' }}>›</span><span style={{ fontWeight: 'bold', color: '#4CAF50' }}>{selectedSubject}</span></>)}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '28px', maxWidth: '720px' }}>
+          <div className="responsive-grid-2" style={{ marginBottom: '24px', maxWidth: '720px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#334155' }}>Select Subject</label>
               <select
                 value={selectedSubject}
                 onChange={(e) => handleSubjectSelect(e.target.value)}
                 disabled={subjectsLoading}
-                style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e1', borderRadius: '8px', background: '#fff', fontSize: '0.95rem', color: '#1e293b' }}
               >
                 <option value="">{subjectsLoading ? 'Loading...' : subjects.length === 0 ? 'No subjects yet' : '-- Select a subject --'}</option>
                 {subjects.map(sub => <option key={sub} value={sub}>{sub}</option>)}
@@ -258,7 +255,7 @@ function HeadMasterDashboard() {
                 type="button"
                 onClick={() => setTeacherDropdownOpen(open => !open)}
                 disabled={!selectedSubject || allTeacherGroups.length === 0}
-                style={{ width: '100%', padding: '11px 14px', border: '1px solid #cbd5e1', borderRadius: '8px', background: (!selectedSubject || allTeacherGroups.length === 0) ? '#f8fafc' : '#fff', fontSize: '0.95rem', color: '#1e293b', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: (!selectedSubject || allTeacherGroups.length === 0) ? 'not-allowed' : 'pointer' }}
+                style={{ width: '100%', padding: '11px 14px', minHeight: '44px', border: '1px solid #cbd5e1', borderRadius: '8px', background: (!selectedSubject || allTeacherGroups.length === 0) ? '#f8fafc' : '#fff', fontSize: '0.95rem', color: '#1e293b', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: (!selectedSubject || allTeacherGroups.length === 0) ? 'not-allowed' : 'pointer' }}
               >
                 <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{teacherFilterLabel}</span>
                 <span style={{ color: '#94a3b8', marginLeft: '8px' }}>{teacherDropdownOpen ? '▲' : '▼'}</span>
@@ -266,14 +263,14 @@ function HeadMasterDashboard() {
 
               {teacherDropdownOpen && allTeacherGroups.length > 0 && (
                 <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 20, background: '#fff', border: '1px solid #cbd5e1', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', maxHeight: '260px', overflowY: 'auto' }}>
-                  <div onClick={clearTeacherSelection} style={{ padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold', color: selectedTeacherIds.length === 0 ? '#16a34a' : '#475569', backgroundColor: selectedTeacherIds.length === 0 ? '#f0fdf4' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
+                  <div onClick={clearTeacherSelection} style={{ padding: '12px 14px', minHeight: '44px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold', color: selectedTeacherIds.length === 0 ? '#16a34a' : '#475569', backgroundColor: selectedTeacherIds.length === 0 ? '#f0fdf4' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
                     {selectedTeacherIds.length === 0 ? '✓ ' : ''}All Teachers
                   </div>
                   {allTeacherGroups.map(g => {
                     const checked = selectedTeacherIds.includes(g.teacherId);
                     return (
-                      <label key={g.teacherId} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', cursor: 'pointer', fontSize: '0.9rem', backgroundColor: checked ? '#f0fdf4' : 'transparent' }} onMouseDown={(e) => e.preventDefault()}>
-                        <input type="checkbox" checked={checked} onChange={() => toggleTeacherId(g.teacherId)} style={{ cursor: 'pointer', width: '15px', height: '15px', accentColor: '#16a34a' }} />
+                      <label key={g.teacherId} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 14px', minHeight: '44px', cursor: 'pointer', fontSize: '0.9rem', backgroundColor: checked ? '#f0fdf4' : 'transparent' }} onMouseDown={(e) => e.preventDefault()}>
+                        <input type="checkbox" checked={checked} onChange={() => toggleTeacherId(g.teacherId)} />
                         <span style={{ color: '#1e293b', flex: 1 }}>{g.teacherName}</span>
                         <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: getProgressColor(g.avgProgress) }}>{g.avgProgress}%</span>
                       </label>
@@ -287,29 +284,31 @@ function HeadMasterDashboard() {
           {progressLoading && <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>Loading section data...</div>}
 
           {!progressLoading && selectedSubject && sectionsProgress.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
+            <div style={{ textAlign: 'center', padding: '40px 16px', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '12px' }}>
               No sections allocated for {selectedSubject} in {selectedClass.className}.
             </div>
           )}
 
           {!progressLoading && visibleSections.length > 0 && (
             <div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '28px' }}>
+              <div className="responsive-grid-3" style={{ marginBottom: '24px' }}>
                 {[
                   { label: 'Sections Shown', value: visibleSections.length },
                   { label: 'Fully Complete', value: visibleSections.filter(s => s.progress === 100).length },
                   { label: 'Average Progress', value: `${Math.round(visibleSections.reduce((sum, s) => sum + s.progress, 0) / visibleSections.length)}%` }
                 ].map(stat => (
-                  <div key={stat.label} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px 20px' }}>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</p>
-                    <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</p>
+                  <div key={stat.label} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '14px 18px' }}>
+                    <p style={{ margin: '0 0 4px 0', fontSize: '0.78rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</p>
+                    <p style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</p>
                   </div>
                 ))}
               </div>
 
-              <div style={{ marginBottom: '32px' }}>
-                <h3 style={{ margin: '0 0 14px 0', color: '#334155' }}>Teacher Summary</h3>
-                <div style={{ border: '1px solid #e2e8f0', borderRadius: '10px', overflow: 'hidden' }}>
+              <div style={{ marginBottom: '28px' }}>
+                <h3 style={{ margin: '0 0 14px 0', color: '#334155', fontSize: '1.05rem' }}>Teacher Summary</h3>
+
+                {/* Desktop table — hidden under 720px via .teacher-table-wrap CSS rule */}
+                <div className="teacher-table-wrap" style={{ border: '1px solid #e2e8f0', borderRadius: '10px', overflow: 'hidden' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                     <thead>
                       <tr style={{ backgroundColor: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
@@ -331,7 +330,7 @@ function HeadMasterDashboard() {
                             <td style={{ padding: '14px 16px', color: '#475569' }}>{group.sections.map(s => `Sec ${s.section}`).join(', ')}</td>
                             <td style={{ padding: '14px 16px' }}>
                               <div style={{ backgroundColor: '#f1f5f9', borderRadius: '4px', height: '8px', overflow: 'hidden' }}>
-                                <div style={{ backgroundColor: getProgressColor(group.avgProgress), width: `${group.avgProgress}%`, height: '100%', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                                <div style={{ backgroundColor: getProgressColor(group.avgProgress), width: `${group.avgProgress}%`, height: '100%', borderRadius: '4px' }} />
                               </div>
                             </td>
                             <td style={{ padding: '14px 16px', textAlign: 'right', fontWeight: 'bold', color: getProgressColor(group.avgProgress) }}>{group.avgProgress}%</td>
@@ -340,8 +339,41 @@ function HeadMasterDashboard() {
                       })}
                     </tbody>
                   </table>
+
+                  {/* Mobile stacked-card version of the same data — shown only under 720px */}
+                  {visibleTeacherGroups.map((group) => {
+                    const isSelected = selectedTeacherIds.includes(group.teacherId);
+                    return (
+                      <div
+                        key={`stack-${group.teacherId}`}
+                        className="teacher-stack-card"
+                        onClick={() => toggleTeacherId(group.teacherId)}
+                        style={{
+                          padding: '14px 16px',
+                          borderBottom: '1px solid #f1f5f9',
+                          backgroundColor: isSelected ? '#f0fdf4' : '#fff',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                          <div>
+                            <div style={{ fontWeight: '600', color: '#1e293b' }}>{group.teacherName}</div>
+                            {group.teacherMobile && <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{group.teacherMobile}</div>}
+                          </div>
+                          <span style={{ fontWeight: 'bold', color: getProgressColor(group.avgProgress), fontSize: '1rem' }}>{group.avgProgress}%</span>
+                        </div>
+                        <div style={{ fontSize: '0.82rem', color: '#64748b', marginBottom: '8px' }}>
+                          {group.sections.map(s => `Sec ${s.section}`).join(', ')}
+                        </div>
+                        <div style={{ backgroundColor: '#f1f5f9', borderRadius: '4px', height: '8px', overflow: 'hidden' }}>
+                          <div style={{ backgroundColor: getProgressColor(group.avgProgress), width: `${group.avgProgress}%`, height: '100%', borderRadius: '4px' }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+
                   {selectedTeacherIds.length > 0 && (
-                    <div style={{ padding: '10px 16px', backgroundColor: '#f0fdf4', borderTop: '1px solid #e2e8f0', fontSize: '0.82rem', color: '#16a34a', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ padding: '10px 16px', backgroundColor: '#f0fdf4', borderTop: '1px solid #e2e8f0', fontSize: '0.82rem', color: '#16a34a', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
                       <span>Showing <strong>{teacherFilterLabel}</strong></span>
                       <button onClick={clearTeacherSelection} style={{ background: 'none', border: 'none', color: '#16a34a', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.82rem', textDecoration: 'underline' }}>Show all</button>
                     </div>
@@ -349,14 +381,14 @@ function HeadMasterDashboard() {
                 </div>
               </div>
 
-              <h3 style={{ margin: '0 0 16px 0', color: '#334155' }}>
+              <h3 style={{ margin: '0 0 16px 0', color: '#334155', fontSize: '1.05rem' }}>
                 {selectedSubject} — {selectedTeacherIds.length === 0 ? 'All Sections by Teacher' : 'Sections by Selected Teacher(s)'}
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 {visibleTeacherGroups.map(group => (
                   <div key={group.teacherId}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', backgroundColor: '#f1f5f9', borderRadius: '8px', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '8px', padding: '10px 16px', backgroundColor: '#f1f5f9', borderRadius: '8px', marginBottom: '12px' }}>
                       <div>
                         <span style={{ fontWeight: 'bold', color: '#1e293b' }}>👤 {group.teacherName}</span>
                         {group.teacherMobile && <span style={{ fontSize: '0.82rem', color: '#94a3b8', marginLeft: '10px' }}>{group.teacherMobile}</span>}
@@ -377,12 +409,12 @@ function HeadMasterDashboard() {
 
                         return (
                           <div key={idx} style={{ background: '#fff', border: `1px solid ${isExpanded ? getProgressColor(pct) : '#e2e8f0'}`, borderRadius: '10px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-                            <div onClick={() => setExpandedSection(isExpanded ? null : cardKey)} style={{ padding: '16px 20px', cursor: 'pointer' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                  <h4 style={{ margin: 0, color: '#1e293b', fontSize: '0.95rem' }}>Section {detail.section}</h4>
+                            <div onClick={() => setExpandedSection(isExpanded ? null : cardKey)} style={{ padding: '14px 16px', cursor: 'pointer' }}>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
+                                  <h4 style={{ margin: 0, color: '#1e293b', fontSize: '0.92rem' }}>Section {detail.section}</h4>
                                   {(sylStart || sylEnd) && (
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '2px 8px' }}>
+                                    <span style={{ fontSize: '0.72rem', color: '#94a3b8', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '2px 8px' }}>
                                       📅 {sylStart || '—'} → {sylEnd || '—'}
                                     </span>
                                   )}
@@ -395,18 +427,17 @@ function HeadMasterDashboard() {
                                 </div>
                               </div>
 
-                              {/* ── Teacher comment — always visible ── */}
                               {hasComment && (
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', margin: '0 0 10px 0', padding: '7px 10px', backgroundColor: '#fffbeb', border: '1px solid #fde68a', borderRadius: '6px' }}>
                                   <span style={{ fontSize: '0.78rem', flexShrink: 0 }}>💬</span>
-                                  <span style={{ fontSize: '0.78rem', color: '#92400e', fontStyle: 'italic', lineHeight: '1.4' }}>{detail.comment}</span>
+                                  <span style={{ fontSize: '0.78rem', color: '#92400e', fontStyle: 'italic', lineHeight: '1.4', wordBreak: 'break-word' }}>{detail.comment}</span>
                                 </div>
                               )}
 
                               <div style={{ backgroundColor: '#f1f5f9', borderRadius: '6px', height: '8px', overflow: 'hidden', marginBottom: '6px' }}>
-                                <div style={{ backgroundColor: getProgressColor(pct), width: `${pct}%`, height: '100%', borderRadius: '6px', transition: 'width 0.4s ease' }} />
+                                <div style={{ backgroundColor: getProgressColor(pct), width: `${pct}%`, height: '100%', borderRadius: '6px' }} />
                               </div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#94a3b8' }}>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '6px', fontSize: '0.78rem', color: '#94a3b8' }}>
                                 <span>{detail.completedTopics} of {detail.totalTopics} subtopics completed</span>
                                 {pct === 100 && <span style={{ color: '#16a34a', fontWeight: 'bold' }}>✓ Complete</span>}
                               </div>
@@ -422,16 +453,16 @@ function HeadMasterDashboard() {
                                     const subs = topic.subtopics || [];
                                     return (
                                       <div key={ti} style={{ borderBottom: ti < detail.topics.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
-                                        <div style={{ padding: '12px 20px', backgroundColor: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                          <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '0.9rem' }}>{topic.title}</span>
-                                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <div style={{ padding: '12px 16px', backgroundColor: '#f8fafc', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                                          <span style={{ fontWeight: 'bold', color: '#1e293b', fontSize: '0.88rem' }}>{topic.title}</span>
+                                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             {subs.length > 0 && (
                                               <>
-                                                <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{topicProg.completed}/{topicProg.total} done</span>
-                                                <div style={{ width: '80px', backgroundColor: '#e2e8f0', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
+                                                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{topicProg.completed}/{topicProg.total} done</span>
+                                                <div style={{ width: '60px', backgroundColor: '#e2e8f0', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
                                                   <div style={{ width: `${topicProg.pct}%`, height: '100%', backgroundColor: getProgressColor(topicProg.pct), borderRadius: '4px' }} />
                                                 </div>
-                                                <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: getProgressColor(topicProg.pct), minWidth: '32px', textAlign: 'right' }}>{topicProg.pct}%</span>
+                                                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: getProgressColor(topicProg.pct), minWidth: '30px', textAlign: 'right' }}>{topicProg.pct}%</span>
                                               </>
                                             )}
                                           </div>
@@ -439,12 +470,12 @@ function HeadMasterDashboard() {
                                         {subs.map((sub, si) => {
                                           const isDone = getSubtopicStatus(detail, sub._id) === 'completed';
                                           return (
-                                            <div key={si} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 20px 9px 36px', borderBottom: si < subs.length - 1 ? '1px solid #f8fafc' : 'none', backgroundColor: isDone ? '#f0fdf4' : '#fff' }}>
+                                            <div key={si} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 16px 9px 28px', borderBottom: si < subs.length - 1 ? '1px solid #f8fafc' : 'none', backgroundColor: isDone ? '#f0fdf4' : '#fff' }}>
                                               <div style={{ width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0, backgroundColor: isDone ? '#16a34a' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                 {isDone && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>✓</span>}
                                               </div>
-                                              <span style={{ fontSize: '0.85rem', color: isDone ? '#94a3b8' : '#334155', textDecoration: isDone ? 'line-through' : 'none' }}>{sub.title}</span>
-                                              {!isDone && <span style={{ marginLeft: 'auto', fontSize: '0.72rem', color: '#cbd5e1' }}>not covered</span>}
+                                              <span style={{ fontSize: '0.83rem', color: isDone ? '#94a3b8' : '#334155', textDecoration: isDone ? 'line-through' : 'none', wordBreak: 'break-word' }}>{sub.title}</span>
+                                              {!isDone && <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#cbd5e1', flexShrink: 0 }}>not covered</span>}
                                             </div>
                                           );
                                         })}

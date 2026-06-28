@@ -12,7 +12,7 @@ function MonitorWithTeaching({ user, monitorLabel, MonitorComponent, monitorProp
   const [activeTab, setActiveTab] = useState('monitor');
   return (
     <div>
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '28px', borderBottom: '2px solid #e2e8f0' }}>
+      <div className="scroll-x-tabs" style={{ marginBottom: '24px', borderBottom: '2px solid #e2e8f0' }}>
         {[
           { key: 'monitor', label: monitorLabel },
           { key: 'teaching', label: '📋 My Teaching' }
@@ -21,14 +21,17 @@ function MonitorWithTeaching({ user, monitorLabel, MonitorComponent, monitorProp
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             style={{
-              padding: '10px 24px',
+              padding: '10px 20px',
+              minHeight: '44px',
               backgroundColor: activeTab === tab.key ? '#4CAF50' : '#f1f5f9',
               color: activeTab === tab.key ? 'white' : '#475569',
               border: 'none',
               cursor: 'pointer',
               fontWeight: 'bold',
               borderRadius: '6px 6px 0 0',
-              fontSize: '0.95rem'
+              fontSize: '0.92rem',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
             }}
           >
             {tab.label}
@@ -96,7 +99,7 @@ function App() {
   };
 
   if (loading) return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'Arial' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'Arial', padding: '0 20px', textAlign: 'center' }}>
       <h3>Initializing School Gateways...</h3>
     </div>
   );
@@ -104,22 +107,52 @@ function App() {
   return (
     <Router>
       <div style={{ minHeight: '100vh', backgroundColor: '#f5f7fb', fontFamily: 'Arial, sans-serif' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#ffffff', padding: '15px 30px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', borderBottom: '1px solid #eef2f6' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/images/logo.jpeg" alt="Montessori Indus School" style={{ height: '36px', width: '36px', objectFit: 'cover', borderRadius: '6px' }} />
-            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.3rem', fontWeight: '700' }}>Montessori Indus Residential School - Syllabus Tracking </h2>
+        <header
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '10px',
+            backgroundColor: '#ffffff',
+            padding: '12px 16px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+            borderBottom: '1px solid #eef2f6',
+            position: 'sticky',
+            top: 0,
+            zIndex: 30
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: '1 1 auto' }}>
+            <img
+              src="/images/logo.jpeg"
+              alt="Montessori Indus School"
+              style={{ height: '32px', width: '32px', objectFit: 'cover', borderRadius: '6px', flexShrink: 0 }}
+            />
+            <h2
+              style={{
+                margin: 0,
+                color: '#1e293b',
+                fontSize: 'clamp(0.8rem, 3.6vw, 1.3rem)',
+                fontWeight: '700',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                minWidth: 0
+              }}
+            >
+              Montessori Indus Residential School - Syllabus Tracking
+            </h2>
           </div>
           {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <span style={{ fontSize: '0.95rem', color: '#64748b' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+              <span style={{ fontSize: '0.85rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <strong style={{ color: '#0f172a' }}>{user.name}</strong>
-                <span style={{ marginLeft: '6px', fontSize: '0.75rem', backgroundColor: '#e2e8f0', padding: '3px 6px', borderRadius: '4px', textTransform: 'uppercase', color: '#475569', fontWeight: 'bold' }}>{user.role}</span>
+                <span style={{ fontSize: '0.7rem', backgroundColor: '#e2e8f0', padding: '3px 6px', borderRadius: '4px', textTransform: 'uppercase', color: '#475569', fontWeight: 'bold' }}>{user.role}</span>
               </span>
               <button
                 onClick={handleLogout}
-                style={{ padding: '8px 16px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}
-                onMouseOver={e => e.target.style.backgroundColor = '#dc2626'}
-                onMouseOut={e => e.target.style.backgroundColor = '#ef4444'}
+                style={{ padding: '8px 14px', minHeight: '38px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.82rem' }}
               >
                 Sign Out
               </button>
@@ -127,7 +160,7 @@ function App() {
           )}
         </header>
 
-        <main style={{ padding: '30px', maxWidth: '1400px', margin: '0 auto' }}>
+        <main className="page-container">
           <Routes>
             <Route path="/login" element={!user ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/" replace />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to="/" replace />} />

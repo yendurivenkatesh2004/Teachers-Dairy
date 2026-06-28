@@ -45,60 +45,57 @@ function Register() {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <div style={{ background: '#fff', padding: '30px', borderRadius: '8px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>Create Portal Account</h2>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 140px)', padding: '12px' }}>
+      <div style={{ background: '#fff', padding: '24px 20px', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333', fontSize: '1.4rem' }}>Create Portal Account</h2>
 
         {error && <div style={{ backgroundColor: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '4px', marginBottom: '15px', fontSize: '0.9rem', textAlign: 'center' }}>{error}</div>}
         {success && <div style={{ backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '10px', borderRadius: '4px', marginBottom: '15px', fontSize: '0.9rem', textAlign: 'center' }}>{success}</div>}
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#555' }}>Full Name</label>
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold', color: '#555' }}>Full Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
               required
-              style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
               disabled={loading}
             />
           </div>
 
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#555' }}>Mobile Number</label>
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold', color: '#555' }}>Mobile Number</label>
             <input
               type="text"
+              inputMode="numeric"
               value={mobileNo}
               onChange={(e) => setMobileNo(e.target.value)}
               placeholder="9876543210"
               maxLength="10"
               required
-              style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
               disabled={loading}
             />
           </div>
 
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#555' }}>Password</label>
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold', color: '#555' }}>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
               disabled={loading}
             />
           </div>
 
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#555' }}>Account Role</label>
+            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold', color: '#555' }}>Account Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', background: '#fff', fontSize: '0.95rem' }}
               disabled={loading}
             >
               <option value="teacher">Teacher</option>
@@ -113,7 +110,7 @@ function Register() {
           <button
             type="submit"
             disabled={loading}
-            style={{ width: '100%', backgroundColor: loading ? '#9ccc65' : '#2196F3', color: 'white', padding: '12px', border: 'none', borderRadius: '4px', cursor: loading ? 'not-allowed' : 'pointer', fontWeight: 'bold', fontSize: '1rem' }}
+            style={{ width: '100%', backgroundColor: loading ? '#9ccc65' : '#2196F3', color: 'white', padding: '14px', border: 'none', borderRadius: '6px', cursor: loading ? 'not-allowed' : 'pointer', fontWeight: 'bold', fontSize: '1rem' }}
           >
             {loading ? 'Creating Account...' : 'Register'}
           </button>

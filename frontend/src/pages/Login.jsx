@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // <-- Add this line
+import { Link } from 'react-router-dom';
 
 /**
  * Login Component
@@ -16,7 +16,6 @@ function Login({ onLoginSuccess }) {
     setError('');
     setLoading(true);
 
-    // Simple validation check
     if (!mobileNo || !password) {
       setError('Please fill in all fields.');
       setLoading(false);
@@ -38,11 +37,9 @@ function Login({ onLoginSuccess }) {
         throw new Error(data.message || 'Invalid mobile number or password.');
       }
 
-      // 1. Save token and user details to localStorage for session persistence
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      // 2. Trigger parent callback to transition app state to logged-in mode
       if (onLoginSuccess) {
         onLoginSuccess(data.user);
       }
@@ -58,18 +55,19 @@ function Login({ onLoginSuccess }) {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: '70vh'
+      minHeight: 'calc(100vh - 140px)',
+      padding: '12px'
     }}>
       <div style={{
         background: '#fff',
-        padding: '30px',
-        borderRadius: '8px',
+        padding: '24px 20px',
+        borderRadius: '10px',
         boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
         width: '100%',
         maxWidth: '400px'
       }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>Teacher Portal Login</h2>
-        
+        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333', fontSize: '1.4rem' }}>Teacher Portal Login</h2>
+
         {error && (
           <div style={{
             backgroundColor: '#ffebee',
@@ -86,29 +84,23 @@ function Login({ onLoginSuccess }) {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '15px' }}>
-            <label htmlFor="mobileNo" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#555' }}>
+            <label htmlFor="mobileNo" style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold', color: '#555' }}>
               Mobile Number
             </label>
             <input
               type="text"
+              inputMode="numeric"
               id="mobileNo"
               value={mobileNo}
               onChange={(e) => setMobileNo(e.target.value)}
               placeholder="9876543210"
               maxLength="10"
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                boxSizing: 'border-box'
-              }}
               disabled={loading}
             />
           </div>
 
           <div style={{ marginBottom: '20px' }}>
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#555' }}>
+            <label htmlFor="password" style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold', color: '#555' }}>
               Password
             </label>
             <input
@@ -117,13 +109,6 @@ function Login({ onLoginSuccess }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                boxSizing: 'border-box'
-              }}
               disabled={loading}
             />
           </div>
@@ -135,9 +120,9 @@ function Login({ onLoginSuccess }) {
               width: '100%',
               backgroundColor: loading ? '#9ccc65' : '#4CAF50',
               color: 'white',
-              padding: '12px',
+              padding: '14px',
               border: 'none',
-              borderRadius: '4px',
+              borderRadius: '6px',
               cursor: loading ? 'not-allowed' : 'pointer',
               fontWeight: 'bold',
               fontSize: '1rem',
